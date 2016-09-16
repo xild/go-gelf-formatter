@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/caarlos0/env"
 
 	"os"
-	"time"
 )
 
 type GELFFormatter struct {
@@ -19,7 +19,7 @@ type Message struct {
 	Host      string                 `json:"host"`
 	Short     string                 `json:"short_message"`
 	Full      string                 `json:"full_message"`
-	Timestamp float64                `json:"timestamp"`
+	Timestamp string                 `json:"timestamp"`
 	Level     int32                  `json:"level"`
 	File      string                 `json:"file"`
 	Line      int                    `json:"line"`
@@ -28,6 +28,17 @@ type Message struct {
 
 type ExtraEnvField struct {
 	Facility string `env:"APPLICATION_NAME"`
+}
+
+var cfg ExtraEnvField
+
+func init() {
+	cfg := ExtraEnvField{}
+	err := env.Parse(&cfg)
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+	}
+	fmt.Printf("%+v\n", cfg)
 }
 
 func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
@@ -54,7 +65,7 @@ func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	extra := map[string]interface{}{}
 	//set facility as application name or null
-	extra["_facility"] = ExtraEnvField.Facility
+	extra["_facility"] = cfg.Facility
 	// Merge extra fields
 	for f, v := range entry.Data {
 		f = fmt.Sprintf("_%s", f) // "[...] every field you send and prefix with a _ (underscore) will be treated as an additional field."
@@ -66,7 +77,7 @@ func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		Host:      host,
 		Short:     string(short),
 		Full:      string(full),
-		TimeStamp: entry.Time.Format(time.DefaultTimestampFormat),
+		Timestamp: entry.Time.Format(logrus.DefaultTimestampFormat),
 		Level:     level,
 		// File:     entry.file, deprecated
 		// Line:     entry.line, deprecated
