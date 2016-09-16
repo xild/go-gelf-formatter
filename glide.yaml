@@ -1,0 +1,3 @@
+package: github.com/xild/go-gelf-formatter
+import:
+- package: github.com/Sirupsen/logrus
