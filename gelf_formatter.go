@@ -1,4 +1,4 @@
-package gelf_formatter
+package xild
 
 import (
 	"encoding/json"
