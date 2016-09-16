@@ -1,8 +1,0 @@
-hash: 46d97520177b7859d0bdb92290eaa611b3bf7565cbd553674c37f45c7d907047
-updated: 2016-09-16T15:47:52.717185345-03:00
-imports:
-- name: github.com/caarlos0/env
-  version: 8030fe5519ecb59ee38cb3c534b86dc868f23262
-- name: github.com/Sirupsen/logrus
-  version: 3ec0642a7fb6488f65b06f9040adc67e3990296a
-devImports: []

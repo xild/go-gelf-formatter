@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/caarlos0/env"
 
 	"os"
 )
@@ -24,21 +23,6 @@ type Message struct {
 	File      string                 `json:"file"`
 	Line      int                    `json:"line"`
 	Extra     map[string]interface{} `json:"-"`
-}
-
-type ExtraEnvField struct {
-	Facility string `env:"APPLICATION_NAME"`
-}
-
-var cfg ExtraEnvField
-
-func init() {
-	cfg := ExtraEnvField{}
-	err := env.Parse(&cfg)
-	if err != nil {
-		fmt.Printf("%+v\n", err)
-	}
-	fmt.Printf("%+v\n", cfg)
 }
 
 func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
@@ -65,7 +49,9 @@ func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	extra := map[string]interface{}{}
 	//set facility as application name or null
-	extra["_facility"] = cfg.Facility
+	if appName := os.Getenv("APPLICATION_NAME"); appName != "" {
+		extra["_facility"] = appName
+	}
 	// Merge extra fields
 	for f, v := range entry.Data {
 		f = fmt.Sprintf("_%s", f) // "[...] every field you send and prefix with a _ (underscore) will be treated as an additional field."
