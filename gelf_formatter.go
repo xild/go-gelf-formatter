@@ -48,7 +48,7 @@ func (f *GELFFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	level := int32(entry.Level) + 2 // logrus levels are lower than syslog by 2
 
 	m := Message{
-		Version:   "1.1",
+		Version:   "1.0",
 		Host:      host,
 		Short:     string(short),
 		Full:      string(full),

@@ -10,6 +10,24 @@ All logrus.Fields are printed like additional fields in gelf format.
 If you set a envrionment variable with APPLICATION_NAME the formatter will print 
 a additional field called _appName
 
+If there are newlines in the message, use the first line for the short message and set the full message to the original input
+
+The code bellow will print: 
+```json 
+{
+    "version": "1.0",
+    "host": "MACHINE_NAME os.GET",
+    "short_message": "A group of walrus emerges from the ocean",
+    "full_message": "A group of walrus emerges from the ocean The ocean That's all I need",
+    "timestamp": "2016-09-19T10:57:42-03:00",
+    "level": 6,
+    "file": "",
+    "line": 0,
+    "_animal": "walrus",
+    "_size": 10
+}
+```
+
 ```go
 package main
 
@@ -19,26 +37,19 @@ import (
 )
 
 func init() {
-  // Log as JSON instead of the default ASCII formatter.
+  // Log as GELF FORMATTER instead of the default ASCII formatter.
   log.SetFormatter(&xild.GELFFormatter{})
-
-  // Output to stderr instead of stdout, could also be a file.
-  log.SetOutput(os.Stderr)
-
-  // Only log the warning severity or above.
-  log.SetLevel(log.WarnLevel)
 }
 
 func main() {
-  log.WithFields(logrus.Fields{
+  log.WithFields(log.Fields{
     "animal": "walrus",
     "size":   10,
-  }).Info("A group of walrus emerges from the ocean")
+  }).Info("A group of walrus emerges from the ocean \n The ocean That's all I need")
 }
 ```
 
-
-## Contributing to GoRequest:
+## Contributing:
 
 If you find any improvement or issue you want to fix, feel free to send me a pull request with testing.
 
