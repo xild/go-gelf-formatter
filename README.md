@@ -1,7 +1,7 @@
 Logrus Gelf Formatter
 =========
 
-Formatter - sometimes we just want to a formatter for GELF formatter instead the hook to the server.
+Formatter - Format your LogRus log in GELF FORMAT.
 
 ## Formatter 
 
